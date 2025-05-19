@@ -10,7 +10,7 @@ pipeline {
         stage('Clone') {
             steps {
                 timeout(time: 2, unit: 'MINUTES'){
-                    git branch: 'main', credentialsId: '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', url: 'https://github.com/josy870/pruebazx.git'
+                    git branch: 'main', credentialsId: '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', url: 'https://github.com/josy870/pruebazx.git'
                 }
             }
         }

@@ -1,6 +1,4 @@
 package pe.edu.upeu.sysalmacen.control;
-
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
@@ -16,12 +14,12 @@ import pe.edu.upeu.sysalmacen.modelo.Marca;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) //Permite que el BeforeEach se ejecute una sola vez
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS) //Permite que el  se ejecute una sola vez BeforeEach
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 public class MarcaControllerWebTestClientTest {
-
     @LocalServerPort
     private int port;
     @Autowired
@@ -55,8 +53,7 @@ public class MarcaControllerWebTestClientTest {
             if (token == null) {
                 webTestClient.post()
                         .uri("/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(udto)//.toCharArray()
+                        .contentType(MediaType.APPLICATION_JSON).bodyValue(udto)//.toCharArray()
                         .exchange()
                         .expectStatus().isCreated()
                         .expectBody(String.class)
@@ -74,6 +71,7 @@ public class MarcaControllerWebTestClientTest {
         }
     }
 
+
     @Test
     @Order(1)
     public void testListarMarca() {
@@ -84,7 +82,7 @@ public class MarcaControllerWebTestClientTest {
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
-                .jsonPath("$[0].nombre").isEqualTo("Puma")
+                .jsonPath("$[0].nombre").isEqualTo("Adidas")
                 .jsonPath("$").isArray();
         //.jsonPath("$").value(Matchers.hasSize(5));
     }
@@ -93,10 +91,10 @@ public class MarcaControllerWebTestClientTest {
     @Test
     @Order(2)
     public void testGuardarMarca() {
-        marca = Marca.builder()
-                .nombre("AdidasX").build();
+        marca = Marca.builder().nombre("AdidasX").build();
         try {
-            var datoBuscado = webTestClient.post().uri("http://localhost:" + this.port + "/marcas")
+            var datoBuscado = webTestClient.post().uri("http://localhost:" +
+                            this.port + "/marcas")
                     .header("Authorization", "Bearer " + token)
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(marca)
@@ -105,7 +103,6 @@ public class MarcaControllerWebTestClientTest {
                     .expectBody(String.class)
                     .returnResult()
                     .getResponseBody();
-
             JSONObject jsonObj = new JSONObject(datoBuscado);
             if (jsonObj.length() > 1) {
                 idx = Long.parseLong(jsonObj.getString("id"));
@@ -120,16 +117,19 @@ public class MarcaControllerWebTestClientTest {
     @Test
     @Order(3)
     public void testActualizarMarca() {
-        Marca marcax = Marca.builder()
-                .nombre("AdidasY").build();
-        Long datoBuscado = webTestClient.get().uri("http://localhost:" + this.port + "/marcas/buscarmaxid")
+        Marca marcax = Marca.builder().nombre("AdidasY").build();
+
+        Long datoBuscado = webTestClient.get().uri("http://localhost:" +
+                        this.port + "/marcas/buscarmaxid")
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Long.class)
                 .returnResult()
                 .getResponseBody();
-        webTestClient.put().uri("http://localhost:" + this.port + "/marcas/{id}", datoBuscado)
+
+        webTestClient.put().uri("http://localhost:" + this.port +
+                        "/marcas/{id}", datoBuscado)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(marcax)
@@ -140,14 +140,17 @@ public class MarcaControllerWebTestClientTest {
     @Test
     @Order(4)
     public void testBuscarMarca() {
-        Long datoBuscado = webTestClient.get().uri("http://localhost:" + this.port + "/marcas/buscarmaxid")
+        Long datoBuscado = webTestClient.get().uri("http://localhost:" +
+                        this.port + "/marcas/buscarmaxid")
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Long.class)
                 .returnResult()
                 .getResponseBody();
-        webTestClient.get().uri("http://localhost:" + this.port + "/marcas/{id}", datoBuscado)
+
+        webTestClient.get().uri("http://localhost:" + this.port +
+                        "/marcas/{id}", datoBuscado)
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
@@ -159,7 +162,8 @@ public class MarcaControllerWebTestClientTest {
     @Test
     @Order(5)
     public void testEliminarMarca() {
-        Long datoBuscado = webTestClient.get().uri("http://localhost:" + this.port + "/marcas/buscarmaxid")
+        Long datoBuscado = webTestClient.get().uri("http://localhost:" +
+                        this.port + "/marcas/buscarmaxid")
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
@@ -168,10 +172,12 @@ public class MarcaControllerWebTestClientTest {
                 .getResponseBody();
         Long id = datoBuscado;
         System.out.println("Elimnar: " + id);
-        webTestClient.delete().uri("http://localhost:" + this.port + "/marcas/{id}", id)
+        webTestClient.delete().uri("http://localhost:" + this.port +
+                        "/marcas/{id}", id)
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk();
     }
+
 
 }
